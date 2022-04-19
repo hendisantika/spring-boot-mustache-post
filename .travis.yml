@@ -1,0 +1,52 @@
+language: java
+jdk:
+  - openjdk11
+
+branches:
+  only:
+    - master
+
+# Travis CI server's Home
+cache:
+  directories:
+    - '$HOME/.m2/repository'
+    - '$HOME/.gradle'
+
+script: "./gradlew clean build"
+
+before_deploy:
+  - mkdir -p before-deploy # Create a directory to contain the files to be included in the zip.
+  - cp scripts/*.sh before-deploy/
+  - cp appspec.yml before-deploy/
+  - cp build/libs/*.jar before-deploy/
+  - cd before-deploy && zip -r before-deploy * # Full compression after moving to before-deploy
+  - cd ../ && mkdir -p deploy # Move to the parent directory and create a deploy directory
+  - mv before-deploy/before-deploy.zip deploy/freelec-springboot2-webservice.zip # Move the zip file with deploy
+
+deploy:
+  - provider: s3
+    access_key_id: $AWS_ACCESS_KEY # Value set in Travis repo settings
+    secret_access_key: $AWS_SECRET_KEY # Value set in Travis repo settings
+    bucket: freelec-springboot-build # S3 Bucket
+    region: ap-northeast-2
+    skip_cleanup: true
+    acl: private # zip file access private
+    local_dir: deploy # directory created by before_deploy
+    wait-until-deployed: true
+
+  - provider: codedeploy
+    access_key_id: $AWS_ACCESS_KEY # Value set in Travis repo settings
+    secret_access_key: $AWS_SECRET_KEY # Value set in Travis repo settings
+    bucket: freelec-springboot-build # S3 Bucket
+    key: freelec-springboot2-webservice.zip # Compress and deliver the build file
+    bundle_type: zip
+    application: freelec-springboot2-webservice # CodeDeploy application registered in the web console
+    deployment_group: freelec-springboot2-webservice-group # CodeDeploy deployment group registered in the web console
+    region: ap-northeast-2
+    wait-until-deployed: true
+
+# Alarm by e-mail when CI execution is completed
+notifications:
+  email:
+    recipients:
+      - hendisantika@gmail.com
