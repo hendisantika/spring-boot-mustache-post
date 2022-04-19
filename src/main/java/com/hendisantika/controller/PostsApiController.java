@@ -1,10 +1,12 @@
 package com.hendisantika.controller;
 
+import com.hendisantika.dto.PostsResponseDto;
 import com.hendisantika.dto.PostsSaveRequestDto;
 import com.hendisantika.dto.PostsUpdateRequestDto;
 import com.hendisantika.service.PostsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -40,5 +42,10 @@ public class PostsApiController {
     public Long delete(@PathVariable Long id) {
         postsService.delete(id);
         return id;
+    }
+
+    @GetMapping("/api/v1/posts/{id}")
+    public PostsResponseDto findById(@PathVariable Long id) {
+        return postsService.findById(id);
     }
 }
