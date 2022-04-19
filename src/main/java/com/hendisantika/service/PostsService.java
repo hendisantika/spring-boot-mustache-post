@@ -2,6 +2,10 @@ package com.hendisantika.service;
 
 import com.hendisantika.domain.post.Posts;
 import com.hendisantika.domain.post.PostsRepository;
+import com.hendisantika.dto.PostsListResponseDto;
+import com.hendisantika.dto.PostsResponseDto;
+import com.hendisantika.dto.PostsSaveRequestDto;
+import com.hendisantika.dto.PostsUpdateRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
