@@ -1,5 +1,6 @@
 package com.hendisantika.controller;
 
+import com.hendisantika.dto.PostsListResponseDto;
 import com.hendisantika.dto.PostsResponseDto;
 import com.hendisantika.dto.PostsSaveRequestDto;
 import com.hendisantika.dto.PostsUpdateRequestDto;
@@ -12,6 +13,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 /**
  * Created by IntelliJ IDEA.
@@ -47,5 +50,10 @@ public class PostsApiController {
     @GetMapping("/api/v1/posts/{id}")
     public PostsResponseDto findById(@PathVariable Long id) {
         return postsService.findById(id);
+    }
+
+    @GetMapping("/api/v1/posts/list")
+    public List<PostsListResponseDto> findAll() {
+        return postsService.findAllDesc();
     }
 }
