@@ -1,5 +1,6 @@
 package com.hendisantika.config.auth;
 
+import com.hendisantika.dto.SessionUser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.MethodParameter;
 import org.springframework.stereotype.Component;

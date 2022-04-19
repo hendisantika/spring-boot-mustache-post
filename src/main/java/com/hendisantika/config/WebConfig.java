@@ -1,5 +1,6 @@
 package com.hendisantika.config;
 
+import com.hendisantika.config.auth.LoginUserArgumentResolver;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
