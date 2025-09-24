@@ -4,7 +4,6 @@ import com.hendisantika.config.auth.LoginUser;
 import com.hendisantika.dto.PostsResponseDto;
 import com.hendisantika.dto.SessionUser;
 import com.hendisantika.service.PostsService;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,11 +18,14 @@ import org.springframework.web.bind.annotation.PathVariable;
  * Date: 19/04/22
  * Time: 12.36
  */
-@RequiredArgsConstructor
 @Controller
 public class IndexController {
 
     private final PostsService postsService;
+
+    public IndexController(PostsService postsService) {
+        this.postsService = postsService;
+    }
 
     @GetMapping("/")
     public String index(Model model, @LoginUser SessionUser user) {

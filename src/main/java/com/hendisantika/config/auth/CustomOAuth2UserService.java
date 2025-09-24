@@ -5,7 +5,6 @@ import com.hendisantika.domain.user.UserRepository;
 import com.hendisantika.dto.OAuthAttributes;
 import com.hendisantika.dto.SessionUser;
 import jakarta.servlet.http.HttpSession;
-import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
@@ -26,11 +25,15 @@ import java.util.Collections;
  * Date: 19/04/22
  * Time: 12.26
  */
-@RequiredArgsConstructor
 @Service
 public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequest, OAuth2User> {
     private final UserRepository userRepository;
     private final HttpSession httpSession;
+
+    public CustomOAuth2UserService(UserRepository userRepository, HttpSession httpSession) {
+        this.userRepository = userRepository;
+        this.httpSession = httpSession;
+    }
 
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
@@ -49,13 +52,13 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
 
         return new DefaultOAuth2User(
                 Collections.singleton(new SimpleGrantedAuthority(user.getRoleKey())),
-                attributes.getAttributes(),
-                attributes.getNameAttributeKey());
+                attributes.attributes(),
+                attributes.nameAttributeKey());
     }
 
     private User saveOrUpdate(OAuthAttributes attributes) {
-        User user = userRepository.findByEmail(attributes.getEmail())
-                .map(entity -> entity.update(attributes.getName(), attributes.getPicture()))
+        User user = userRepository.findByEmail(attributes.email())
+                .map(entity -> entity.update(attributes.name(), attributes.picture()))
                 .orElse(attributes.toEntity());
 
         return userRepository.save(user);

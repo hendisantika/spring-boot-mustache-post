@@ -47,4 +47,51 @@ public class Posts extends BaseTimeEntity {
         this.title = title;
         this.content = content;
     }
+
+    // Static builder method for compatibility
+    public static PostsBuilder builder() {
+        return new PostsBuilder();
+    }
+
+    // Manual getters for compatibility
+    public Long getId() {
+        return id;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public String getAuthor() {
+        return author;
+    }
+
+    public static class PostsBuilder {
+        private String title;
+        private String content;
+        private String author;
+
+        public PostsBuilder title(String title) {
+            this.title = title;
+            return this;
+        }
+
+        public PostsBuilder content(String content) {
+            this.content = content;
+            return this;
+        }
+
+        public PostsBuilder author(String author) {
+            this.author = author;
+            return this;
+        }
+
+        public Posts build() {
+            return new Posts(this.title, this.content, this.author);
+        }
+    }
 }

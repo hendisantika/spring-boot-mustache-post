@@ -24,4 +24,13 @@ public class PostsUpdateRequestDto {
         this.title = title;
         this.content = content;
     }
+
+    // Manual getters for compatibility
+    public String getTitle() {
+        return title;
+    }
+
+    public String getContent() {
+        return content;
+    }
 }

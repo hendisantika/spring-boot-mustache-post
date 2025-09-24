@@ -1,8 +1,5 @@
 package com.hendisantika.dto;
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-
 /**
  * Created by IntelliJ IDEA.
  * Project : spring-boot-mustache-post
@@ -12,9 +9,6 @@ import lombok.RequiredArgsConstructor;
  * Date: 19/04/22
  * Time: 12.32
  */
-@Getter
-@RequiredArgsConstructor
-public class HelloResponseDto {
-    private final String name;
-    private final int amount;
+public record HelloResponseDto(String name, int amount) {
+    // Manual constructor for compatibility
 }

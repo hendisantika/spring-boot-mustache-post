@@ -2,7 +2,6 @@ package com.hendisantika.config.auth;
 
 import com.hendisantika.dto.SessionUser;
 import jakarta.servlet.http.HttpSession;
-import lombok.RequiredArgsConstructor;
 import org.springframework.core.MethodParameter;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.support.WebDataBinderFactory;
@@ -19,11 +18,14 @@ import org.springframework.web.method.support.ModelAndViewContainer;
  * Date: 19/04/22
  * Time: 12.25
  */
-@RequiredArgsConstructor
 @Component
 public class LoginUserArgumentResolver implements HandlerMethodArgumentResolver {
 
     private final HttpSession httpSession;
+
+    public LoginUserArgumentResolver(HttpSession httpSession) {
+        this.httpSession = httpSession;
+    }
 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {

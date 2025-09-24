@@ -1,7 +1,6 @@
 package com.hendisantika.config;
 
 import com.hendisantika.config.auth.LoginUserArgumentResolver;
-import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -17,10 +16,13 @@ import java.util.List;
  * Date: 19/04/22
  * Time: 12.23
  */
-@RequiredArgsConstructor
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
     private final LoginUserArgumentResolver loginUserArgumentResolver;
+
+    public WebConfig(LoginUserArgumentResolver loginUserArgumentResolver) {
+        this.loginUserArgumentResolver = loginUserArgumentResolver;
+    }
 
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> argumentResolvers) {

@@ -6,7 +6,6 @@ import com.hendisantika.dto.PostsListResponseDto;
 import com.hendisantika.dto.PostsResponseDto;
 import com.hendisantika.dto.PostsSaveRequestDto;
 import com.hendisantika.dto.PostsUpdateRequestDto;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,10 +21,13 @@ import java.util.stream.Collectors;
  * Date: 19/04/22
  * Time: 12.30
  */
-@RequiredArgsConstructor
 @Service
 public class PostsService {
     private final PostsRepository postsRepository;
+
+    public PostsService(PostsRepository postsRepository) {
+        this.postsRepository = postsRepository;
+    }
 
     @Transactional
     public Long save(PostsSaveRequestDto requestDto) {

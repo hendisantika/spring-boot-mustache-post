@@ -5,7 +5,6 @@ import com.hendisantika.dto.PostsResponseDto;
 import com.hendisantika.dto.PostsSaveRequestDto;
 import com.hendisantika.dto.PostsUpdateRequestDto;
 import com.hendisantika.service.PostsService;
-import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,11 +24,14 @@ import java.util.List;
  * Date: 19/04/22
  * Time: 12.38
  */
-@RequiredArgsConstructor
 @RestController
 public class PostsApiController {
 
     private final PostsService postsService;
+
+    public PostsApiController(PostsService postsService) {
+        this.postsService = postsService;
+    }
 
     @PostMapping("/api/v1/posts")
     public Long save(@RequestBody PostsSaveRequestDto requestDto) {
