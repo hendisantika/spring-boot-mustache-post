@@ -7,7 +7,51 @@ updates:
       time: '05:00'
       timezone: Asia/Jakarta
     open-pull-requests-limit: 10
+    target-branch: main
+    labels:
+      - dependencies
+      - java
+    commit-message:
+      prefix: "build(deps)"
+      prefix-development: "build(deps-dev)"
+      include: scope
+    groups:
+      # Spring Boot parent and Spring projects move together
+      spring:
+        patterns:
+          - "org.springframework*"
+          - "org.springframework.boot:*"
+          - "org.springframework.session:*"
+          - "org.springframework.security:*"
+        update-types:
+          - minor
+          - patch
+      # Remaining libraries (Lombok, H2, Maven plugins, ...)
+      maven-minor-patch:
+        patterns:
+          - "*"
+        exclude-patterns:
+          - "org.springframework*"
+        update-types:
+          - minor
+          - patch
+
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
-      interval: "daily"
+      interval: weekly
+      day: monday
+      time: '05:00'
+      timezone: Asia/Jakarta
+    open-pull-requests-limit: 5
+    target-branch: main
+    labels:
+      - dependencies
+      - github_actions
+    commit-message:
+      prefix: "ci(deps)"
+      include: scope
+    groups:
+      github-actions:
+        patterns:
+          - "*"
