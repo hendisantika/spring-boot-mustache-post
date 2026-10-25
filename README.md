@@ -1,6 +1,11 @@
 # Spring Boot Mustache Post Application
 
-A modern web application built with Spring Boot 3.5.6, featuring OAuth2 authentication, JPA data persistence, and
+[![Java CI with Maven](https://github.com/hendisantika/spring-boot-mustache-post/actions/workflows/maven.yml/badge.svg)](https://github.com/hendisantika/spring-boot-mustache-post/actions/workflows/maven.yml)
+![Java](https://img.shields.io/badge/Java-25-orange?logo=openjdk)
+![Spring Boot](https://img.shields.io/badge/Spring%20Boot-4.1.2-brightgreen?logo=springboot)
+![Dependabot](https://img.shields.io/badge/Dependabot-enabled-blue?logo=dependabot)
+
+A modern web application built with Spring Boot 4.1.2 and Java 25, featuring OAuth2 authentication, JPA data persistence, and
 Mustache templating for creating and managing blog posts.
 
 ## 🚀 Features
@@ -8,7 +13,7 @@ Mustache templating for creating and managing blog posts.
 ### Authentication & Security
 
 - **OAuth2 Integration**: Google and Naver OAuth2 login support
-- **Spring Security 6**: Modern security configuration with JWT support
+- **Spring Security 7**: Lambda-style `SecurityFilterChain` configuration
 - **Session Management**: JDBC-based session storage for scalability
 - **Role-based Access**: User and Guest roles with appropriate permissions
 
@@ -21,17 +26,18 @@ Mustache templating for creating and managing blog posts.
 
 ### Technical Stack
 
-- **Framework**: Spring Boot 3.5.6
+- **Framework**: Spring Boot 4.1.2 (Spring Framework 7, Spring Security 7)
 - **Template Engine**: Mustache (JMustache)
 - **Database**: H2 (development), configurable for production
 - **ORM**: Spring Data JPA with Hibernate
-- **Build Tool**: Maven
-- **Java Version**: 25 (LTS compatible)
+- **Build Tool**: Maven (via Maven Wrapper, Maven 3.10.0)
+- **Java Version**: 25 (LTS)
+- **CI/CD**: GitHub Actions + Dependabot
 
 ## 📋 Prerequisites
 
-- Java 21+ (Java 25 supported)
-- Maven 3.6+
+- JDK 25 (e.g. [Eclipse Temurin 25](https://adoptium.net/))
+- Maven is optional — the bundled Maven Wrapper (`./mvnw`) downloads the right version
 - IDE with Lombok support (IntelliJ IDEA, VS Code, Eclipse)
 
 ## 🛠️ Installation & Setup
@@ -74,20 +80,20 @@ spring.security.oauth2.client.registration.naver.client-secret=YOUR_NAVER_CLIENT
 ### 3. Build the Application
 
 ```bash
-mvn clean install
+./mvnw clean install
 ```
 
 ### 4. Run the Application
 
 ```bash
-# Using Maven
-mvn spring-boot:run
+# Using the Maven Wrapper
+./mvnw spring-boot:run
 
 # Or using Java directly
 java -jar target/spring-boot-mustache-post-0.0.1-SNAPSHOT.jar
 
 # With specific profile
-mvn spring-boot:run -Dspring.profiles.active=oauth
+./mvnw spring-boot:run -Dspring-boot.run.profiles=oauth
 ```
 
 The application will start on `http://localhost:8080`
@@ -121,7 +127,7 @@ com.hendisantika/
 
 #### Security Configuration
 
-- **SecurityConfig**: Spring Security 6 configuration
+- **SecurityConfig**: Spring Security 7 configuration
 - **CustomOAuth2UserService**: OAuth2 user service implementation
 - **LoginUserArgumentResolver**: Custom authentication resolver
 
@@ -237,13 +243,10 @@ java -jar app.jar --spring.profiles.active=real,real-db
 
 ```bash
 # All tests
-mvn test
+./mvnw test
 
 # Specific test class
-mvn test -Dtest=SpringBootMustachePostApplicationTests
-
-# With coverage
-mvn test jacoco:report
+./mvnw test -Dtest=SpringBootMustachePostApplicationTests
 ```
 
 ### Test Structure
@@ -254,22 +257,36 @@ src/test/java/
     └── SpringBootMustachePostApplicationTests.java
 ```
 
-## 📊 Monitoring & Health
+## ⚙️ Continuous Integration & Dependency Updates
 
-### Actuator Endpoints
+### GitHub Actions
 
-Spring Boot Actuator provides monitoring endpoints:
+The [`Java CI with Maven`](.github/workflows/maven.yml) workflow runs on every push and pull request to `main`
+(and can be triggered manually):
 
-- `/actuator/health` - Application health
-- `/actuator/info` - Application information
-- `/actuator/metrics` - Application metrics
+- Sets up **Temurin JDK 25** with Maven dependency caching
+- Runs `./mvnw -B verify` (compile + tests)
+- On pushes to `main`, submits the Maven dependency graph to GitHub so Dependabot alerts are accurate
+- Uses least-privilege permissions and cancels superseded runs on the same branch
+
+### Dependabot
+
+[`dependabot.yml`](.github/dependabot.yml) keeps dependencies current:
+
+| Ecosystem      | Schedule                    | Grouping                                                    | Commit prefix  |
+|----------------|-----------------------------|-------------------------------------------------------------|----------------|
+| Maven          | Daily, 05:00 Asia/Jakarta   | `spring` (Spring projects) and `maven-minor-patch` (others) | `build(deps)`  |
+| GitHub Actions | Weekly, Monday 05:00        | All actions in one `github-actions` group                   | `ci(deps)`     |
+
+Major version bumps are opened as individual PRs so they can be reviewed separately. All Dependabot PRs are
+labelled `dependencies` plus `java` or `github_actions`.
 
 ## 🚀 Deployment
 
 ### Docker Deployment
 
 ```dockerfile
-FROM openjdk:21-jdk
+FROM eclipse-temurin:25-jre
 COPY target/spring-boot-mustache-post-0.0.1-SNAPSHOT.jar app.jar
 EXPOSE 8080
 ENTRYPOINT ["java","-jar","/app.jar"]
@@ -292,7 +309,7 @@ If you encounter compilation errors related to missing getters/setters:
 
 1. Enable Lombok annotation processing in your IDE
 2. Ensure Lombok plugin is installed
-3. For Java 25, ensure compatible Lombok version
+3. For Java 25, use Lombok 1.18.40+ (managed by the Spring Boot parent)
 
 #### OAuth2 Configuration
 
